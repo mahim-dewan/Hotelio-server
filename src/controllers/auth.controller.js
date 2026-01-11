@@ -1,3 +1,5 @@
+// src/controllers/auth.controller.js
+
 const User = require("../models/user.model");
 const { generateToken, tokenVerify } = require("../utils/jwtToken");
 
@@ -20,6 +22,8 @@ const verifyToken = async (req, res, next) => {
     if (!token) return res.status(401).json({ message: "Not logged in" });
 
     const decoded = await tokenVerify(token);
+    console.log(decoded);
+    
 
     const user = await User.findById(decoded._id).select("-password");
 
@@ -42,11 +46,11 @@ const verifyToken = async (req, res, next) => {
  */
 const signout = async (req, res, next) => {
   try {
-
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.json({ success: true, message: "Logged out" });
@@ -65,7 +69,35 @@ const googleCallback = async (req, res, next) => {
 
     const token = await generateToken(user);
 
-    res.cookie("token", token);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.redirect(`${process.env.CLIENT_URL}`);
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Facebook OAuth callback
+ * @route GET /api/auth/facebook/callback
+ */
+const facebookCallback = async (req, res, next) => {
+  try {
+    const user = req?.user;
+
+    const token = await generateToken(user);
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.redirect(`${process.env.CLIENT_URL}`);
   } catch (err) {
@@ -78,4 +110,5 @@ module.exports = {
   verifyToken,
   signout,
   googleCallback,
+  facebookCallback,
 };
