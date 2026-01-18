@@ -1,18 +1,22 @@
 // src/routes/auth.routes.js
 
 const express = require("express");
+const passport = require("passport");
 const {
   register,
   verifyToken,
   signout,
   googleCallback,
   facebookCallback,
+  login,
 } = require("../controllers/auth.controller");
-const passport = require("passport");
 
 const authRouter = express.Router();
 
+// =========== Routes ================
 authRouter.post("/register", register);
+
+authRouter.post("/login", login);
 
 authRouter.get("/me", verifyToken);
 

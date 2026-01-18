@@ -94,7 +94,7 @@ passport.use(
           photo: profile.photos[0].value,
         });
 
-        done(null, profile);
+        done(null, user);
       } catch (err) {
         done(err, null);
       }

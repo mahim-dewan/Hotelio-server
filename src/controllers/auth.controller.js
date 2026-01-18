@@ -1,6 +1,8 @@
 // src/controllers/auth.controller.js
 
 const User = require("../models/user.model");
+const { registerUser, loginUser } = require("../services/auth.service");
+const { setAuthCookie, clearAuthCookie } = require("../utils/cookie");
 const { generateToken, tokenVerify } = require("../utils/jwtToken");
 
 /**
@@ -8,7 +10,31 @@ const { generateToken, tokenVerify } = require("../utils/jwtToken");
  * @route POST /api/auth/register
  */
 const register = async (req, res, next) => {
-  res.send("New user create");
+  try {
+    await registerUser(req.body);
+
+    res.json({ success: true, message: "Registration Successfull." });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Login a user
+ * @route POST /api/auth/login
+ */
+const login = async (req, res, next) => {
+  try {
+    const token = await loginUser(req.body);
+
+    setAuthCookie(res, token);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Login Successfull" });
+  } catch (err) {
+    next(err);
+  }
 };
 
 /**
@@ -23,7 +49,6 @@ const verifyToken = async (req, res, next) => {
 
     const decoded = await tokenVerify(token);
     console.log(decoded);
-    
 
     const user = await User.findById(decoded._id).select("-password");
 
@@ -46,12 +71,7 @@ const verifyToken = async (req, res, next) => {
  */
 const signout = async (req, res, next) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    clearAuthCookie(res);
 
     res.json({ success: true, message: "Logged out" });
   } catch (err) {
@@ -69,12 +89,7 @@ const googleCallback = async (req, res, next) => {
 
     const token = await generateToken(user);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setAuthCookie(res, token);
 
     res.redirect(`${process.env.CLIENT_URL}`);
   } catch (err) {
@@ -92,12 +107,7 @@ const facebookCallback = async (req, res, next) => {
 
     const token = await generateToken(user);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setAuthCookie(res, token);
 
     res.redirect(`${process.env.CLIENT_URL}`);
   } catch (err) {
@@ -107,6 +117,7 @@ const facebookCallback = async (req, res, next) => {
 
 module.exports = {
   register,
+  login,
   verifyToken,
   signout,
   googleCallback,

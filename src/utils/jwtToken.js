@@ -1,3 +1,5 @@
+// src/utils/jwtToken.js
+
 const jwt = require("jsonwebtoken");
 
 const generateToken = async (user) => {

@@ -4,12 +4,12 @@ Hotelio Backend is a scalable REST API built with Node.js, Express.js, and Mongo
 It handles authentication, user management, hotel listings, bookings, and secure role-based access.
 
 ## 🖇️ Quick Links
-[live link](https://localhost:3000)
-[Frontend Repo](https://localhost:3000)   
+[**Live Link**](https://localhost:3000)     
+[**Frontend Repo**](https://localhost:3000)   
 
 ## 🚀 Features
 
--  Authentication & Authorization (JWT + Cookies)
+-  Authentication & Authorization (bcrypt + JWT + Cookies)
 
 
 ## 🛠️ Tech Stack
@@ -33,7 +33,9 @@ hotelio-server/
 │   ├── middlewares/
 │   ├── models/
 │   ├── routes/
+│   ├── services/
 │   ├── utils/
+│   ├── validators/
 │   ├── app.js
 │   └── server.js
 ├── .env
@@ -45,12 +47,22 @@ hotelio-server/
 
 ## 📌 API Endpoints
 
-### auth 
+### Auth 
 #### Register new user
 ```http
 POST : api/auth/register 
 {
-
+    "name": "Mahim",
+    "email": "mahimdewan79@gmail.com",
+    "password": "aaBB22ff"
+}
+```
+#### Login user
+```http
+POST : api/auth/login 
+{
+    "email": "mahimdewan79@gmail.com",
+    "password": "aaBB22ff"
 }
 ```
 #### Sign in with google
@@ -78,6 +90,9 @@ MONGO_URI=mongodb_connection_string
 
 GOOGLE_Client_ID=client_ID
 GOOGLE_CLIENT_SECRET=client_secret
+
+FACEBOOK_APP_ID=your_app_id
+FACEBOOK_APP_SECRET=your_app_secret
 
 SERVER_URL=http://localhost:5000/api
 CLIENT_URL=http://localhost:3000
