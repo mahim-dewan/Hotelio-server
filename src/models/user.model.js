@@ -24,11 +24,14 @@ const userSchema = new mongoose.Schema(
       default: "USER",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // mongoose pre hook
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
+  // Skip if password doesn't exist (OAuth users)
+  if (!this.password) return next();
+  
   const hashedPassword = await makeHashPassword(this.password);
   this.password = hashedPassword;
 });

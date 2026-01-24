@@ -21,13 +21,14 @@ const userRegistrationSchema = Joi.object({
   password: Joi.string()
     .min(8)
     .max(128)
-    .pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/)
+    .pattern(/^(?=.*[A-Za-z])(?=.*\d).{8,}$/)
     .required()
     .messages({
       "string.min": "Password must be at least 8 characters long",
-      "string.pattern.base": "Password must contain at least one letter and one number",
+      "string.pattern.base":
+        "Password must contain at least one letter and one number",
       "string.empty": "Password is required",
     }),
 }).options({ abortEarly: false });
 
-module.exports = {userRegistrationSchema};
+module.exports = { userRegistrationSchema };

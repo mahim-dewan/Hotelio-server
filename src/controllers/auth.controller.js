@@ -48,7 +48,6 @@ const verifyToken = async (req, res, next) => {
     if (!token) return res.status(401).json({ message: "Not logged in" });
 
     const decoded = await tokenVerify(token);
-    console.log(decoded);
 
     const user = await User.findById(decoded._id).select("-password");
 

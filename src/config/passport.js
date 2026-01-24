@@ -23,7 +23,7 @@ passport.use(
         });
 
         if (user) {
-          return done(null, profile);
+          return done(null, user);
         }
 
         // 2. Check if email already exists with another provider
