@@ -4,13 +4,14 @@ Hotelio Backend is a scalable REST API built with Node.js, Express.js, and Mongo
 It handles authentication, user management, hotel listings, bookings, and secure role-based access.
 
 ## 🖇️ Quick Links
-[**Live Link**](https://localhost:3000)     
-[**Frontend Repo**](https://localhost:3000)   
+
+[**Live Link**](https://localhost:3000)  
+[**Frontend Repo**](https://hotel-hotelio.vercel.app/)
 
 ## 🚀 Features
 
--  Authentication & Authorization (bcrypt + JWT + Cookies)
-
+- Authentication & Authorization (bcrypt + JWT + Cookies)
+- Secure Email-Based Registration with OTP Verification
 
 ## 🛠️ Tech Stack
 
@@ -22,9 +23,10 @@ It handles authentication, user management, hotel listings, bookings, and secure
 
 **Environment:** dotenv
 
-**Others:** Cookie-parser, CORS
+**Others:** Cookie-parser, CORS, Resend
 
 ## 📁 Project Structure
+
 ```http
 hotelio-server/
 ├── src/
@@ -34,6 +36,7 @@ hotelio-server/
 │   ├── models/
 │   ├── routes/
 │   ├── services/
+│   ├── templates/
 │   ├── utils/
 │   ├── validators/
 │   ├── app.js
@@ -45,45 +48,27 @@ hotelio-server/
 
 ```
 
-## 📌 API Endpoints
+## ⚙️ Installation & Set Up
 
-### Auth 
-#### Register new user
-```http
-POST : api/auth/register 
-{
-    "name": "Mahim",
-    "email": "mahimdewan79@gmail.com",
-    "password": "aaBB22ff"
-}
-```
-#### Login user
-```http
-POST : api/auth/login 
-{
-    "email": "mahimdewan79@gmail.com",
-    "password": "aaBB22ff"
-}
-```
-#### Sign in with google
-```http
-GET : api/auth/google
+1. Clone the repository:
+
+```bash
+
+git clone https://github.com/mahim-dewan/Hotelio-server.git
+
 ```
 
-#### Verify logged in user
-```http
-GET : api/auth/me
+2. Install dependencies:
+
+```bash
+
+npm install
+
 ```
 
-#### Sign out
-```http
-GET : api/auth/signout
-```
+3. Set up Environment Variables: Create a **.env** file in the root directory
 
-## ⚙️ Environment Variables
-
-Create a .env file on the root:
-```http
+```bash
 PORT=5000
 
 MONGO_URI=mongodb_connection_string
@@ -98,4 +83,91 @@ SERVER_URL=http://localhost:5000/api
 CLIENT_URL=http://localhost:3000
 
 JWT_SECRET=define_secret
+
+RESEND_API_KEY=re_yourapikey
 ```
+
+4. Run the application:
+
+```bash
+
+# Development mode (with nodemon)
+npm run dev
+
+# Production mode
+npm start
+
+```
+
+## 📌 API Endpoints
+
+### Auth
+
+#### Request a new user registration
+
+```bash
+POST : api/auth/request-register
+{
+    "name": "Mahim",
+    "email": "mahimdewan79@gmail.com",
+    "password": "aaBB22ff"
+}
+```
+
+#### Verify and Create a new user
+
+```bash
+POST : api/auth/verify-register
+{
+    "name": "Mahim",
+    "email": "mahimdewan79@gmail.com",
+    "password": "aaBB22ff",
+    "otp": "482468"
+}
+```
+
+#### Resend OTP for registration
+
+```bash
+POST : api/auth/registerOtp-resend
+{
+    "email": "mahimdewan79@gmail.com"
+}
+```
+
+#### Login user
+
+```bash
+POST : api/auth/login
+{
+    "email": "mahimdewan79@gmail.com",
+    "password": "aaBB22ff"
+}
+```
+
+#### Sign in with google
+
+```bash
+GET : api/auth/google
+```
+
+#### Verify logged in user
+
+```bash
+GET : api/auth/me
+```
+
+#### Sign out
+
+```bash
+GET : api/auth/signout
+```
+
+## 👤 Author
+
+**[Mahim Dewan](https://mahim-dewan.vercel.app/)**  
+MERN stack web developer  
+**Whatsapp:** 01568517556, **Email:** mahimdewan79@gmail.com
+
+**[GitHub](https://github.com/mahim-dewan)**↗️  
+**[Linkedin](https://www.linkedin.com/in/mahim-dewan79/)**↗️

@@ -1,9 +1,8 @@
 // src/validators/auth.schema.js
-
 const Joi = require("joi");
 
-// User Register Schema
-const userRegistrationSchema = Joi.object({
+// common fields
+const baseUserSchema = {
   name: Joi.string().trim().min(2).max(30).required().messages({
     "string.empty": "Name is required",
     "string.min": "Name must be at least 2 characters long",
@@ -29,6 +28,21 @@ const userRegistrationSchema = Joi.object({
         "Password must contain at least one letter and one number",
       "string.empty": "Password is required",
     }),
+};
+
+// User Register Schema
+const userRegistrationSchema = Joi.object(baseUserSchema).options({
+  abortEarly: false,
+});
+
+// Verify Register Schema
+const verifyRegisterSchema = Joi.object({
+  ...baseUserSchema,
+  otp: Joi.string().trim().length(6).required().messages({
+    "string.empty": "OTP is required",
+    "string.min": "OTP must be at least 2 characters long",
+    "string.min": "OTP must be at most 30 characters long",
+  }),
 }).options({ abortEarly: false });
 
-module.exports = { userRegistrationSchema };
+module.exports = { userRegistrationSchema, verifyRegisterSchema };

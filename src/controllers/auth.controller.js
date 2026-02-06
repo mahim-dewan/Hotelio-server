@@ -1,17 +1,55 @@
 // src/controllers/auth.controller.js
 
 const User = require("../models/user.model");
-const { registerUser, loginUser } = require("../services/auth.service");
+const {
+  registerUser,
+  loginUser,
+  otpToRegister,
+  registerOtpResendService,
+} = require("../services/auth.service");
 const { setAuthCookie, clearAuthCookie } = require("../utils/cookie");
 const { generateToken, tokenVerify } = require("../utils/jwtToken");
+
+/**
+ * @desc Create an otp if email is valid
+ * @route POST /api/auth/request-otp
+ */
+const requestRegister = async (req, res, next) => {
+  try {
+    await otpToRegister(req.body);
+
+    res.status(200).json({ success: true, message: "OTP has been sent" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Resend otp for register
+ * @route POST /api/auth/registerOtp-resend
+ */
+const registerOtpResend = async (req, res, next) => {
+  try {
+    await registerOtpResendService(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "New OTP has been sent. Please Check your Email.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 /**
  * @desc Register new user
  * @route POST /api/auth/register
  */
-const register = async (req, res, next) => {
+const verifyRegister = async (req, res, next) => {
   try {
-    await registerUser(req.body);
+    const { token } = await registerUser(req.body);
+
+    setAuthCookie(res, token);
 
     res.json({ success: true, message: "Registration Successfull." });
   } catch (err) {
@@ -24,7 +62,7 @@ const register = async (req, res, next) => {
  * @route POST /api/auth/login
  */
 const login = async (req, res, next) => {
-  try {
+  try {    
     const token = await loginUser(req.body);
 
     setAuthCookie(res, token);
@@ -115,7 +153,9 @@ const facebookCallback = async (req, res, next) => {
 };
 
 module.exports = {
-  register,
+  requestRegister,
+  verifyRegister,
+  registerOtpResend,
   login,
   verifyToken,
   signout,
