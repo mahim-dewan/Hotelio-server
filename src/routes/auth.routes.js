@@ -10,11 +10,15 @@ const {
   login,
   requestRegister,
   registerOtpResend,
+  forgotPassword,
+  resetPassword,
+  resetOtpResend,
 } = require("../controllers/auth.controller");
 const validate = require("../middlewares/validate.middleware");
 const {
   userRegistrationSchema,
   verifyRegisterSchema,
+  resetPasswordSchema,
 } = require("../validators/auth.validator");
 
 const authRouter = express.Router();
@@ -34,6 +38,16 @@ authRouter.post(
 authRouter.post("/registerOtp-resend", registerOtpResend);
 
 authRouter.post("/login", login);
+
+authRouter.post("/forgot-password", forgotPassword);
+
+authRouter.post(
+  "/reset-password",
+  validate(resetPasswordSchema),
+  resetPassword,
+);
+
+authRouter.post("/resetOtp-resend", resetOtpResend);
 
 authRouter.get("/me", verifyToken);
 

@@ -4,7 +4,7 @@ const ApiError = require("./apiError");
 const sendOtp = async ({ to, subject, template }) => {
   try {
     await resend.emails.send({
-      from: `Email Verificaton <no-reply@resend.dev>`,
+      from: `Hotelio <no-reply@resend.dev>`,
       to: to,
       subject,
       html: template,

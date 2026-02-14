@@ -6,6 +6,9 @@ const {
   loginUser,
   otpToRegister,
   registerOtpResendService,
+  forgotPasswordService,
+  resetPasswordService,
+  resetOtpResendService,
 } = require("../services/auth.service");
 const { setAuthCookie, clearAuthCookie } = require("../utils/cookie");
 const { generateToken, tokenVerify } = require("../utils/jwtToken");
@@ -18,7 +21,13 @@ const requestRegister = async (req, res, next) => {
   try {
     await otpToRegister(req.body);
 
-    res.status(200).json({ success: true, message: "OTP has been sent" });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message:
+          "We sent an OTP to your email. Please verify to create an account.",
+      });
   } catch (err) {
     next(err);
   }
@@ -51,7 +60,9 @@ const verifyRegister = async (req, res, next) => {
 
     setAuthCookie(res, token);
 
-    res.json({ success: true, message: "Registration Successfull." });
+    res
+      .status(201)
+      .json({ success: true, message: "Registration Successfull." });
   } catch (err) {
     next(err);
   }
@@ -62,7 +73,7 @@ const verifyRegister = async (req, res, next) => {
  * @route POST /api/auth/login
  */
 const login = async (req, res, next) => {
-  try {    
+  try {
     const token = await loginUser(req.body);
 
     setAuthCookie(res, token);
@@ -70,6 +81,61 @@ const login = async (req, res, next) => {
     return res
       .status(200)
       .json({ success: true, message: "Login Successfull" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Request to forgot password
+ * @route POST /api/auth/forgot-password
+ */
+const forgotPassword = async (req, res, next) => {
+  try {
+    await forgotPasswordService(req.body);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP has been sent to your email" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Reset password
+ * @route POST /api/auth/reset-password
+ */
+const resetPassword = async (req, res, next) => {
+  try {
+    await resetPasswordService(req.body);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password has been updated. Please login now.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Reset OTP resend
+ * @route POST /api/auth/resetOtp-resend
+ */
+const resetOtpResend = async (req, res, next) => {
+  try {
+    if (!req?.body?.email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "email is required" });
+    }
+    await resetOtpResendService(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "New OTP has been sent. Please Check your Email.",
+    });
   } catch (err) {
     next(err);
   }
@@ -159,6 +225,9 @@ module.exports = {
   login,
   verifyToken,
   signout,
+  forgotPassword,
+  resetPassword,
+  resetOtpResend,
   googleCallback,
   facebookCallback,
 };

@@ -11,7 +11,7 @@ It handles authentication, user management, hotel listings, bookings, and secure
 ## 🚀 Features
 
 - Authentication & Authorization (bcrypt + JWT + Cookies)
-- Secure Email-Based Registration with OTP Verification
+- Secure Email-Based Registration & Password Reset with OTP Verification
 
 ## 🛠️ Tech Stack
 
@@ -27,7 +27,7 @@ It handles authentication, user management, hotel listings, bookings, and secure
 
 ## 📁 Project Structure
 
-```http
+```bash
 hotelio-server/
 ├── src/
 │   ├── config/
@@ -145,6 +145,35 @@ POST : api/auth/login
 }
 ```
 
+#### Password forgot request
+
+```bash
+POST : api/auth/forgot-password
+{
+	"email" : "mahimdewan79@gmail.com"
+}
+```
+
+#### Password reset
+
+```bash
+POST : api/auth/reset-password
+{
+	"email" : "mahimdewan79@gmail.com",
+    "otp" : "489659",
+    "password": "1414VVaa"
+}
+```
+
+#### Password reset OTP resend
+
+```bash
+POST : api/auth/resetOtp-resend
+{
+    "email": "mahimdewan79@gmail.com"
+}
+```
+
 #### Sign in with google
 
 ```bash
@@ -169,5 +198,5 @@ GET : api/auth/signout
 MERN stack web developer  
 **Whatsapp:** 01568517556, **Email:** mahimdewan79@gmail.com
 
-**[GitHub](https://github.com/mahim-dewan)**↗️  
-**[Linkedin](https://www.linkedin.com/in/mahim-dewan79/)**↗️
+**[GitHub](https://github.com/mahim-dewan)**  
+**[Linkedin](https://www.linkedin.com/in/mahim-dewan79/)**
