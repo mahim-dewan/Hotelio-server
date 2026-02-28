@@ -1,14 +1,144 @@
 // src/controllers/auth.controller.js
 
 const User = require("../models/user.model");
+const {
+  registerUser,
+  loginUser,
+  otpToRegister,
+  registerOtpResendService,
+  forgotPasswordService,
+  resetPasswordService,
+  resetOtpResendService,
+} = require("../services/auth.service");
+const { setAuthCookie, clearAuthCookie } = require("../utils/cookie");
 const { generateToken, tokenVerify } = require("../utils/jwtToken");
+
+/**
+ * @desc Create an otp if email is valid
+ * @route POST /api/auth/request-otp
+ */
+const requestRegister = async (req, res, next) => {
+  try {
+    await otpToRegister(req.body);
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message:
+          "We sent an OTP to your email. Please verify to create an account.",
+      });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Resend otp for register
+ * @route POST /api/auth/registerOtp-resend
+ */
+const registerOtpResend = async (req, res, next) => {
+  try {
+    await registerOtpResendService(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "New OTP has been sent. Please Check your Email.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 /**
  * @desc Register new user
  * @route POST /api/auth/register
  */
-const register = async (req, res, next) => {
-  res.send("New user create");
+const verifyRegister = async (req, res, next) => {
+  try {
+    const { token } = await registerUser(req.body);
+
+    setAuthCookie(res, token);
+
+    res
+      .status(201)
+      .json({ success: true, message: "Registration Successfull." });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Login a user
+ * @route POST /api/auth/login
+ */
+const login = async (req, res, next) => {
+  try {
+    const token = await loginUser(req.body);
+
+    setAuthCookie(res, token);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Login Successfull" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Request to forgot password
+ * @route POST /api/auth/forgot-password
+ */
+const forgotPassword = async (req, res, next) => {
+  try {
+    await forgotPasswordService(req.body);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "OTP has been sent to your email" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Reset password
+ * @route POST /api/auth/reset-password
+ */
+const resetPassword = async (req, res, next) => {
+  try {
+    await resetPasswordService(req.body);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password has been updated. Please login now.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * @desc Reset OTP resend
+ * @route POST /api/auth/resetOtp-resend
+ */
+const resetOtpResend = async (req, res, next) => {
+  try {
+    if (!req?.body?.email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "email is required" });
+    }
+    await resetOtpResendService(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "New OTP has been sent. Please Check your Email.",
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 /**
@@ -22,8 +152,6 @@ const verifyToken = async (req, res, next) => {
     if (!token) return res.status(401).json({ message: "Not logged in" });
 
     const decoded = await tokenVerify(token);
-    console.log(decoded);
-    
 
     const user = await User.findById(decoded._id).select("-password");
 
@@ -46,12 +174,7 @@ const verifyToken = async (req, res, next) => {
  */
 const signout = async (req, res, next) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    clearAuthCookie(res);
 
     res.json({ success: true, message: "Logged out" });
   } catch (err) {
@@ -69,12 +192,7 @@ const googleCallback = async (req, res, next) => {
 
     const token = await generateToken(user);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setAuthCookie(res, token);
 
     res.redirect(`${process.env.CLIENT_URL}`);
   } catch (err) {
@@ -92,12 +210,7 @@ const facebookCallback = async (req, res, next) => {
 
     const token = await generateToken(user);
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setAuthCookie(res, token);
 
     res.redirect(`${process.env.CLIENT_URL}`);
   } catch (err) {
@@ -106,9 +219,15 @@ const facebookCallback = async (req, res, next) => {
 };
 
 module.exports = {
-  register,
+  requestRegister,
+  verifyRegister,
+  registerOtpResend,
+  login,
   verifyToken,
   signout,
+  forgotPassword,
+  resetPassword,
+  resetOtpResend,
   googleCallback,
   facebookCallback,
 };

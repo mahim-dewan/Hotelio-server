@@ -1,18 +1,53 @@
 // src/routes/auth.routes.js
-
 const express = require("express");
+const passport = require("passport");
 const {
-  register,
+  verifyRegister,
   verifyToken,
   signout,
   googleCallback,
   facebookCallback,
+  login,
+  requestRegister,
+  registerOtpResend,
+  forgotPassword,
+  resetPassword,
+  resetOtpResend,
 } = require("../controllers/auth.controller");
-const passport = require("passport");
+const validate = require("../middlewares/validate.middleware");
+const {
+  userRegistrationSchema,
+  verifyRegisterSchema,
+  resetPasswordSchema,
+} = require("../validators/auth.validator");
 
 const authRouter = express.Router();
 
-authRouter.post("/register", register);
+// =========== Routes ================
+authRouter.post(
+  "/request-register",
+  validate(userRegistrationSchema),
+  requestRegister,
+);
+
+authRouter.post(
+  "/verify-register",
+  validate(verifyRegisterSchema),
+  verifyRegister,
+);
+authRouter.post("/registerOtp-resend", registerOtpResend);
+
+authRouter.post("/login", login);
+
+authRouter.post("/forgot-password", forgotPassword);
+
+authRouter.post(
+  "/reset-password",
+  validate(resetPasswordSchema),
+  resetPassword,
+);
+
+authRouter.post("/resetOtp-resend", resetOtpResend);
 
 authRouter.get("/me", verifyToken);
 
@@ -23,7 +58,7 @@ authRouter.get(
   passport.authenticate("google", {
     scope: ["profile", "email"],
     prompt: "select_account",
-  })
+  }),
 );
 
 authRouter.get(
@@ -32,7 +67,7 @@ authRouter.get(
     failureRedirect: `${process.env.CLIENT_URL}?login=provider_mismatch`,
     session: false,
   }),
-  googleCallback
+  googleCallback,
 );
 
 authRouter.get(
@@ -40,7 +75,7 @@ authRouter.get(
   passport.authenticate("facebook", {
     scope: ["email"],
     prompt: "select_account",
-  })
+  }),
 );
 
 authRouter.get(
@@ -49,7 +84,7 @@ authRouter.get(
     failureRedirect: `${process.env.CLIENT_URL}?login=provider_mismatch`,
     session: false,
   }),
-  facebookCallback
+  facebookCallback,
 );
 
 module.exports = authRouter;
