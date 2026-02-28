@@ -16,12 +16,12 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://hotel-hotelio.vercel.app/"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
-  })
+  }),
 );
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(passport.initialize());
 
 // Database connection
@@ -30,7 +30,7 @@ connectDB();
 // Routes
 app.get("/api", async (req, res) => {
   res.send(
-    "<h1 style='color:green; text-align:center ; margin-top:100px; font-family:arial' >Welcome to the Hotelio Server</h1>"
+    "<h1 style='color:green; text-align:center ; margin-top:100px; font-family:arial' >Welcome to the Hotelio Server</h1>",
   );
 });
 
