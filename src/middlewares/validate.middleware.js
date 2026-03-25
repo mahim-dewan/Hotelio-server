@@ -11,7 +11,7 @@ const validate = (schema) => (req, res, next) => {
     throw ApiError(
       400,
       "Validation Error",
-      error.details.map((err) => err.message),
+      error.details.map((err) => err.message.replace(/"/g, "")),
     );
   }
 
