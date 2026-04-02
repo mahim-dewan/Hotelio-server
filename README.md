@@ -14,6 +14,8 @@ It handles authentication, user management, hotel listings, bookings, and secure
 - Secure Email-Based Registration & Password Reset with OTP Verification
 - Room Booking System – Allows users to reserve rooms by selecting check-in and check-out dates.
 
+- Multi-currency payment processing with Stripe and SSLCommerz including secure backend validation.
+
 ## 🛠️ Tech Stack
 
 **Backend:** Node.js, Express.js
@@ -86,6 +88,11 @@ CLIENT_URL=http://localhost:3000
 JWT_SECRET=define_secret
 
 RESEND_API_KEY=re_yourapikey
+
+STRIPE_SECRET_KEY=your_secret_key
+
+SSLC_STORE_ID=your_sslc_store_id
+SSLC_STORE_PASS=your_sslc_store_pass
 ```
 
 4. Run the application:
@@ -211,6 +218,22 @@ POST : /booking
     "room" : "69c3d5e6cb99e1b0db9d5893",
     "checkIn" : "2026-04-10",
     "checkOut" : "2026-04-12"
+}
+```
+
+### Payment
+
+#### make payment
+
+```bash
+currency=["BDT","USD"]
+paymentPercentage= [50,10]
+
+POST : /payments/makePayment
+{
+    "bookingId" : "69c413be84ed74c47022519c",
+    "currency" : "BDT",
+    "paymentPercentage" : 50
 }
 ```
 
