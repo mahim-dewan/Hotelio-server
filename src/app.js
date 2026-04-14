@@ -17,8 +17,8 @@ const paymentRouter = require("./routes/payment.route.js");
 const app = express();
 
 // Middlewares
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
@@ -41,7 +41,7 @@ app.get("/api", async (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
-app.use("/api/booking", authMiddleware, bookingRouter);
+app.use("/api/bookings", authMiddleware, bookingRouter);
 app.use("/api/payments", paymentRouter);
 
 // 404 Handler

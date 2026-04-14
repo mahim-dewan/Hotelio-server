@@ -4,7 +4,7 @@ const paymentSchema = new Schema(
   {
     bookingId: {
       type: Schema.Types.ObjectId,
-      ref: "Booking", // Reference to Booking model
+      ref: "Booking",
       required: [true, "Booking ID is required"],
     },
     currency: {

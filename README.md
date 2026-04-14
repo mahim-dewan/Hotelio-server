@@ -11,10 +11,15 @@ It handles authentication, user management, hotel listings, bookings, and secure
 ## 🚀 Features
 
 - Authentication & Authorization (bcrypt + JWT + Cookies)
+
 - Secure Email-Based Registration & Password Reset with OTP Verification
+
 - Room Booking System – Allows users to reserve rooms by selecting check-in and check-out dates.
 
-- Multi-currency payment processing with Stripe and SSLCommerz including secure backend validation.
+- Booking cancellation is allowed only before any payment is made.
+
+- Booking-based payment system supporting multiple and partial payments per booking, multi-currency transactions (BDT/USD), payment status tracking
+
 
 ## 🛠️ Tech Stack
 
@@ -23,6 +28,8 @@ It handles authentication, user management, hotel listings, bookings, and secure
 **Database:** MongoDB, Mongoose
 
 **Authentication:** JWT, bcrypt, passport.js
+
+**Payment Gateway:** Stripe, SSLCommerz
 
 **Environment:** dotenv
 
@@ -208,12 +215,12 @@ GET : /auth/signout
 
 ### Booking
 
-#### create booking
+#### Create booking
 
 only logged in user can be booking rooms
 
 ```bash
-POST : /booking
+POST : /bookings
 {
     "room" : "69c3d5e6cb99e1b0db9d5893",
     "checkIn" : "2026-04-10",
@@ -221,9 +228,20 @@ POST : /booking
 }
 ```
 
+#### Get all bookings by user
+```bash
+GET : /bookings/getBookingsByUser
+```
+
+#### Cancel booking by ID
+User cann't cancel after full/partial payment
+```bash
+PATCH : /bookings/:id/cancel
+```
+
 ### Payment
 
-#### make payment
+#### Make payment
 
 ```bash
 currency=["BDT","USD"]
@@ -236,6 +254,18 @@ POST : /payments/makePayment
     "paymentPercentage" : 50
 }
 ```
+
+#### Get payments by booking IDs
+
+```bash
+POST : /payments/by-bookings
+{
+    "bookingIds" : ["69c413be84ed74c47022519c"]
+}
+```
+## Credits
+Thanks to ChatGPT (OpenAI) and Gemini (Google) for helping me build this project.
+
 
 ## 👤 Author
 

@@ -3,6 +3,7 @@ const {
   makePayment,
   handleSSLCPayment,
   handleStripePayment,
+  getPaymentsByBookings,
 } = require("../controllers/payment.controller");
 const { authMiddleware } = require("../middlewares/auth.middleware");
 const validate = require("../middlewares/validate.middleware");
@@ -16,6 +17,9 @@ paymentRouter.post(
   validate(makePaymentValidator),
   makePayment,
 );
+
+// get all payments by all booking Ids
+paymentRouter.post("/by-bookings", authMiddleware, getPaymentsByBookings);
 
 // SSLCommerz callbacks
 paymentRouter.post("/sslc/successPayment", handleSSLCPayment("success"));

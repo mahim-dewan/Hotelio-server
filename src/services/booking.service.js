@@ -52,4 +52,28 @@ const createBookingService = async (bookingPayload) => {
   return booking;
 };
 
-module.exports = { createBookingService };
+const cancelBookingService = async (id) => {
+  // Check Is booking exist
+  const booking = await Booking.findById(id);
+  if (!booking) {
+    throw ApiError(404, "Booking not found");
+  }
+
+  if (booking.status === "cancelled") {
+    throw ApiError(400, "Booking already cancelled");
+  }
+
+  if (booking.status === "confirmed") {
+    throw ApiError(
+      400,
+      "Booking already confirmed. You can't be cancel it. Please contact to hotel authority for cancel it.",
+    );
+  }
+
+  booking.status = "cancelled";
+  await booking.save();
+
+  return booking;
+};
+
+module.exports = { createBookingService, cancelBookingService };

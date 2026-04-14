@@ -3,6 +3,8 @@ const Payment = require("../models/payment.model");
 const { createSSLPaymentService } = require("../services/sslCommerz.service");
 const { createStripePaymentService } = require("../services/stripe.service");
 const { sslcommerzValidator } = require("../utils/paymentVerify");
+const Booking = require("../models/booking.model");
+const { getPaymentsByBookingsService } = require("../services/payment.service");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -24,6 +26,21 @@ const makePayment = async (req, res, next) => {
     res
       .status(400)
       .json({ success: false, message: "Please select a valid currency" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getPaymentsByBookings = async (req, res, next) => {
+  try {
+    const bookingIds = req.body?.bookingIds;
+
+    const payment = await getPaymentsByBookingsService(bookingIds);
+
+    res.status(200).json({
+      success: true,
+      data: payment,
+    });
   } catch (err) {
     next(err);
   }
@@ -56,8 +73,16 @@ const handleSSLCPayment = (status) => async (req, res, next) => {
       { new: true },
     );
 
+    if (payment.status === "success") {
+      await Booking.findOneAndUpdate(
+        { _id: payment?.bookingId },
+        { status: "confirmed" },
+        { new: true },
+      );
+    }
+
     return res.redirect(
-      `${process.env.CLIENT_URL}/booking/${payment?.bookingId}?payment=${status}&tran_id=${payment?.tran_id}`,
+      `${process.env.CLIENT_URL}/mybookings?payment=${status}&tran_id=${payment?.tran_id}`,
     );
   } catch (err) {
     next(err);
@@ -88,8 +113,16 @@ const handleStripePayment = (status) => async (req, res, next) => {
       { new: true },
     );
 
+    if (payment.status === "success") {
+      await Booking.findOneAndUpdate(
+        { _id: payment?.bookingId },
+        { status: "confirmed" },
+        { new: true },
+      );
+    }
+
     return res.redirect(
-      `${process.env.CLIENT_URL}/booking/${bookingId}?payment=${updatedStatus}&tran_id=${payment?.tran_id}`,
+      `${process.env.CLIENT_URL}/mybookings?payment=${updatedStatus}&tran_id=${payment?.tran_id}`,
     );
   } catch (err) {
     next(err);
@@ -98,6 +131,7 @@ const handleStripePayment = (status) => async (req, res, next) => {
 
 module.exports = {
   makePayment,
+  getPaymentsByBookings,
   handleSSLCPayment,
   handleStripePayment,
 };
