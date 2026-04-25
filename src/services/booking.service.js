@@ -1,6 +1,13 @@
+const doc = require("pdfkit");
 const Booking = require("../models/booking.model");
 const Room = require("../models/room.model");
+const Payment = require("../models/payment.model");
 const ApiError = require("../utils/apiError");
+const buildPDF = require("../templates/invoice.template");
+const {
+  calculateTotalPaid,
+  buildInvoiceData,
+} = require("../utils/invoice.utils");
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -76,4 +83,30 @@ const cancelBookingService = async (id) => {
   return booking;
 };
 
-module.exports = { createBookingService, cancelBookingService };
+const invoiceGenerateService = async (id) => {
+  const booking = await Booking.findById(id).populate("room");
+  const payments = await Payment.find({ bookingId: booking?._id });
+  const room = booking.room;
+
+  if (!booking && payments.length === 0) {
+    throw ApiError(404, "Please Book or Pay first before get invoice.");
+  }
+
+  const totalPaidAmount = calculateTotalPaid(payments, booking);
+
+  const invoiceData = await buildInvoiceData({
+    booking,
+    payments,
+    room,
+    totalPaidAmount,
+  });
+
+  const pdf = await buildPDF(invoiceData);
+  return pdf;
+};
+
+module.exports = {
+  createBookingService,
+  cancelBookingService,
+  invoiceGenerateService,
+};

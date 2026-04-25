@@ -1,7 +1,9 @@
 const Booking = require("../models/booking.model");
+const Payment = require("../models/payment.model");
 const {
   createBookingService,
   cancelBookingService,
+  invoiceGenerateService,
 } = require("../services/booking.service");
 
 // Create a new booking
@@ -53,4 +55,26 @@ const cancelBookingByUser = async (req, res, next) => {
   }
 };
 
-module.exports = { createBooking, getBookingsByUser, cancelBookingByUser };
+// Generate Invoice
+const generateInvoice = async (req, res, next) => {
+  try {
+    const pdf = await invoiceGenerateService(req.params.id);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=Hotelio_Receipt.pdf`,
+    );
+
+    res.send(pdf);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  createBooking,
+  getBookingsByUser,
+  cancelBookingByUser,
+  generateInvoice,
+};

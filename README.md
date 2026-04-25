@@ -20,6 +20,7 @@ It handles authentication, user management, hotel listings, bookings, and secure
 
 - Booking-based payment system supporting multiple and partial payments per booking, multi-currency transactions (BDT/USD), payment status tracking
 
+- After payment user may download invoice as pdf file
 
 ## 🛠️ Tech Stack
 
@@ -30,6 +31,8 @@ It handles authentication, user management, hotel listings, bookings, and secure
 **Authentication:** JWT, bcrypt, passport.js
 
 **Payment Gateway:** Stripe, SSLCommerz
+
+**PDF & QR Code Generate:** pdfkit, qrcode package
 
 **Environment:** dotenv
 
@@ -229,12 +232,15 @@ POST : /bookings
 ```
 
 #### Get all bookings by user
+
 ```bash
 GET : /bookings/getBookingsByUser
 ```
 
 #### Cancel booking by ID
+
 User cann't cancel after full/partial payment
+
 ```bash
 PATCH : /bookings/:id/cancel
 ```
@@ -263,9 +269,18 @@ POST : /payments/by-bookings
     "bookingIds" : ["69c413be84ed74c47022519c"]
 }
 ```
-## Credits
-Thanks to ChatGPT (OpenAI) and Gemini (Google) for helping me build this project.
 
+#### Payment invoice download
+
+Only autenticate user can be access
+
+```bash
+GET : /bookings/:id/invoice
+```
+
+## Credits
+
+Thanks to ChatGPT (OpenAI) and Gemini (Google) for helping me build this project.
 
 ## 👤 Author
 
