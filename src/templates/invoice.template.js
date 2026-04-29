@@ -43,7 +43,7 @@ const drawHeader = (doc, data) => {
   // HEADER BACKGROUND
   doc
     .rect(0, 0, 612, 110) // x, y, width, height
-    .fill(primaryColor);
+    .fill("#0c2b4e");
 
   // HOTEL NAME
   doc
@@ -93,7 +93,7 @@ const drawBooking = (doc, data) => {
 
 // Draw Room Details
 const drawRoom = (doc, data) => {
-  let y = 180;
+  let y = 190;
 
   doc
     .fillColor(secondaryColor)
@@ -184,7 +184,7 @@ const drawRoom = (doc, data) => {
 
 // Draw Payments Detail
 const drawPayments = (doc, data) => {
-  let y = 330;
+  let y = 350;
 
   doc
     .fillColor(secondaryColor)
@@ -192,7 +192,7 @@ const drawPayments = (doc, data) => {
     .fontSize(18)
     .text(`Payment Details`, 50, y);
 
-  y += 40;
+  y += 30;
   doc
     .fillColor(primaryColor)
     .font(primaryFont)
@@ -202,7 +202,7 @@ const drawPayments = (doc, data) => {
     .fillColor(primaryColor)
     .font(primaryFont)
     .fontSize(14)
-    .text("Method", 260, y);
+    .text("Method", 240, y);
   doc
     .fillColor(primaryColor)
     .font(primaryFont)
@@ -219,18 +219,18 @@ const drawPayments = (doc, data) => {
     data.payments?.forEach((payment) => {
       if (payment.status !== "success") return null;
 
-      y += 40;
+      y += 45;
 
       doc
         .fillColor(primaryColor)
         .font(primaryFont)
-        .fontSize(14)
+        .fontSize(12)
         .text(`${payment._id}`, 50, y, { width: 200 });
       doc
         .fillColor(primaryColor)
         .font(primaryFont)
-        .fontSize(14)
-        .text(`${payment.method.toUpperCase()}`, 260, y);
+        .fontSize(12)
+        .text(`${payment.method.toUpperCase()}`, 240, y, { width: 150 });
       doc
         .fillColor(primaryColor)
         .font(primaryFont)
@@ -247,7 +247,7 @@ const drawPayments = (doc, data) => {
 
 // Draw Summary
 const drawSummary = (doc, data) => {
-  let y = 500;
+  let y = 520;
   // Calculation Box
   doc.roundedRect(250, y, 300, 150, 10).fill("#ececec");
 
@@ -292,12 +292,12 @@ const drawSummary = (doc, data) => {
   doc
     .fillColor(secondaryColor)
     .font(boldFont)
-    .fontSize(20)
+    .fontSize(16)
     .text("Total Paid", 270, y);
   doc
     .fillColor(secondaryColor)
     .font(boldFont)
-    .fontSize(20)
+    .fontSize(16)
     .text(`${data.totalPaidAmount} USD`, 450, y);
 
   y += 30;

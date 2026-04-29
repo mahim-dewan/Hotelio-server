@@ -86,7 +86,7 @@ const cancelBookingService = async (id) => {
 const invoiceGenerateService = async (id) => {
   const booking = await Booking.findById(id).populate("room");
   const payments = await Payment.find({ bookingId: booking?._id });
-  const room = booking.room;
+  const room = booking?.room;
 
   if (!booking && payments.length === 0) {
     throw ApiError(404, "Please Book or Pay first before get invoice.");
