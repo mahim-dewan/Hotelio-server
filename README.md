@@ -11,7 +11,16 @@ It handles authentication, user management, hotel listings, bookings, and secure
 ## 🚀 Features
 
 - Authentication & Authorization (bcrypt + JWT + Cookies)
+
 - Secure Email-Based Registration & Password Reset with OTP Verification
+
+- Room Booking System – Allows users to reserve rooms by selecting check-in and check-out dates.
+
+- Booking cancellation is allowed only before any payment is made.
+
+- Booking-based payment system supporting multiple and partial payments per booking, multi-currency transactions (BDT/USD), payment status tracking
+
+- After payment user may download invoice as pdf file
 
 ## 🛠️ Tech Stack
 
@@ -20,6 +29,10 @@ It handles authentication, user management, hotel listings, bookings, and secure
 **Database:** MongoDB, Mongoose
 
 **Authentication:** JWT, bcrypt, passport.js
+
+**Payment Gateway:** Stripe, SSLCommerz
+
+**PDF & QR Code Generate:** pdfkit, qrcode package
 
 **Environment:** dotenv
 
@@ -85,6 +98,11 @@ CLIENT_URL=http://localhost:3000
 JWT_SECRET=define_secret
 
 RESEND_API_KEY=re_yourapikey
+
+STRIPE_SECRET_KEY=your_secret_key
+
+SSLC_STORE_ID=your_sslc_store_id
+SSLC_STORE_PASS=your_sslc_store_pass
 ```
 
 4. Run the application:
@@ -101,12 +119,18 @@ npm start
 
 ## 📌 API Endpoints
 
+### Base API
+
+```bash
+http://localhost:5000/api
+```
+
 ### Auth
 
 #### Request a new user registration
 
 ```bash
-POST : api/auth/request-register
+POST : /auth/request-register
 {
     "name": "Mahim",
     "email": "mahimdewan79@gmail.com",
@@ -117,7 +141,7 @@ POST : api/auth/request-register
 #### Verify and Create a new user
 
 ```bash
-POST : api/auth/verify-register
+POST : /auth/verify-register
 {
     "name": "Mahim",
     "email": "mahimdewan79@gmail.com",
@@ -129,7 +153,7 @@ POST : api/auth/verify-register
 #### Resend OTP for registration
 
 ```bash
-POST : api/auth/registerOtp-resend
+POST : /auth/registerOtp-resend
 {
     "email": "mahimdewan79@gmail.com"
 }
@@ -138,7 +162,7 @@ POST : api/auth/registerOtp-resend
 #### Login user
 
 ```bash
-POST : api/auth/login
+POST : /auth/login
 {
     "email": "mahimdewan79@gmail.com",
     "password": "aaBB22ff"
@@ -148,7 +172,7 @@ POST : api/auth/login
 #### Password forgot request
 
 ```bash
-POST : api/auth/forgot-password
+POST : /auth/forgot-password
 {
 	"email" : "mahimdewan79@gmail.com"
 }
@@ -157,7 +181,7 @@ POST : api/auth/forgot-password
 #### Password reset
 
 ```bash
-POST : api/auth/reset-password
+POST : /auth/reset-password
 {
 	"email" : "mahimdewan79@gmail.com",
     "otp" : "489659",
@@ -168,7 +192,7 @@ POST : api/auth/reset-password
 #### Password reset OTP resend
 
 ```bash
-POST : api/auth/resetOtp-resend
+POST : /auth/resetOtp-resend
 {
     "email": "mahimdewan79@gmail.com"
 }
@@ -177,26 +201,96 @@ POST : api/auth/resetOtp-resend
 #### Sign in with google
 
 ```bash
-GET : api/auth/google
+GET : /auth/google
 ```
 
 #### Verify logged in user
 
 ```bash
-GET : api/auth/me
+GET : /auth/me
 ```
 
 #### Sign out
 
 ```bash
-GET : api/auth/signout
+GET : /auth/signout
 ```
+
+### Booking
+
+#### Create booking
+
+only logged in user can be booking rooms
+
+```bash
+POST : /bookings
+{
+    "room" : "69c3d5e6cb99e1b0db9d5893",
+    "checkIn" : "2026-04-10",
+    "checkOut" : "2026-04-12"
+}
+```
+
+#### Get all bookings by user
+
+```bash
+GET : /bookings/getBookingsByUser
+```
+
+#### Cancel booking by ID
+
+User cann't cancel after full/partial payment
+
+```bash
+PATCH : /bookings/:id/cancel
+```
+
+### Payment
+
+#### Make payment
+
+```bash
+currency=["BDT","USD"]
+paymentPercentage= [50,10]
+
+POST : /payments/makePayment
+{
+    "bookingId" : "69c413be84ed74c47022519c",
+    "currency" : "BDT",
+    "paymentPercentage" : 50
+}
+```
+
+#### Get payments by booking IDs
+
+```bash
+POST : /payments/by-bookings
+{
+    "bookingIds" : ["69c413be84ed74c47022519c"]
+}
+```
+
+#### Payment invoice download
+
+Only autenticate user can be access
+
+```bash
+GET : /bookings/:id/invoice
+```
+
+## Credits
+
+Thanks to ChatGPT (OpenAI) and Gemini (Google) for helping me build this project.
 
 ## 👤 Author
 
-**[Mahim Dewan](https://mahim-dewan.vercel.app/)**  
-MERN stack web developer  
-**Whatsapp:** 01568517556, **Email:** mahimdewan79@gmail.com
+**Mahim Dewan**  
+MERN Stack Developer  
+01568517556 | mahimdewan79@gmail.com
 
-**[GitHub](https://github.com/mahim-dewan)**  
-**[Linkedin](https://www.linkedin.com/in/mahim-dewan79/)**
+### 🛜 Connect With Me
+
+[**Portfolio↗️**](https://mahim-dewan.vercel.app/)
+[**GitHub↗️**](https://github.com/mahim-dewan)
+[**LinkedIn↗️**](https://www.linkedin.com/in/mahim-dewan79)
+[**Whatsapp↗️**](https://wa.me/8801568517556)
