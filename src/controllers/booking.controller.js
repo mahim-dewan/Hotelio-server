@@ -1,3 +1,5 @@
+// src/controllers/booking.controller.js
+
 const Booking = require("../models/booking.model");
 const Payment = require("../models/payment.model");
 const {

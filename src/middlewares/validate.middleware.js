@@ -1,4 +1,5 @@
 // src/middlewares/validate.middleware.js
+
 const ApiError = require("../utils/apiError");
 
 const validate = (schema) => (req, res, next) => {

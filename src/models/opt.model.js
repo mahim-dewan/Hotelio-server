@@ -1,4 +1,5 @@
 // src/models/opt.model.js
+
 const mongoose = require("mongoose");
 
 const otpSchema = new mongoose.Schema(

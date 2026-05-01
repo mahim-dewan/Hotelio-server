@@ -1,3 +1,5 @@
+// src/validators/fields.js
+
 const Joi = require("joi");
 
 const nameField = Joi.string().trim().min(2).max(30).required().messages({

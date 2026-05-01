@@ -1,3 +1,5 @@
+// src/services/stripe.service.js
+
 const Stripe = require("stripe");
 const { createPaymentRecord } = require("./payment.service");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);

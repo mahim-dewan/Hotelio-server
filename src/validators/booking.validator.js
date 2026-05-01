@@ -1,3 +1,5 @@
+// src/validators/booking.validator.js
+
 const Joi = require("joi");
 
 const today = new Date().toLocaleString().split(",")[0];

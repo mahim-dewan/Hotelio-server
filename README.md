@@ -278,6 +278,94 @@ Only autenticate user can be access
 GET : /bookings/:id/invoice
 ```
 
+### Rooms
+
+#### Create a new room (only ADMIN/MODERATOR)
+
+```bash
+POST : /rooms/createRoom
+{
+    "image": "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&q=80&w=800",
+
+    "gallery": [
+      "https://images.unsplash.com/photo-1611892440504-42a792e24d32",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b",
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427"
+    ], // Optional
+
+    "title": "Royal Ocean Penthouse",
+
+    "slugs": "sdkslk",
+
+    "description": "Indulge in unparalleled luxury with panoramic ocean views.",
+
+    "category": "luxury",
+
+    "capacity": 4,
+
+    "size": 780,
+
+    "originalPrice": 250,
+
+    "discountPercentage": 25,  // Optional
+
+    "isExclusive": true, // Optional
+
+    "promoCode": "FIRST-TIME2026", // Optional
+
+    "amenities": ["Private Balcony",
+      "Ocean View",
+      "Jacuzzi",
+      "Premium Wi-Fi",
+      "24/7 Butler Service",
+      "Mini Bar"], // Optional
+
+    "specifications": {
+      "bedType": "King Size",
+      "view": "Panoramic Ocean",
+      "floor": "25th Floor",
+      "smoking": "Non-Smoking"
+    },
+
+    "policies" : {
+      "checkIn": "02:00 PM",
+      "checkOut": "11:00 AM",
+      "cancellation": "Free cancellation up to 48 hours before check-in",
+      "pets": "Not Allowed"
+    }
+}
+```
+
+#### Get Exclusive Rooms
+
+```bash
+GET: /rooms/exclusive
+```
+
+#### Get featured Rooms
+
+```bash
+GET: /rooms/featured
+```
+
+#### Get Family Friendly Rooms
+
+```bash
+GET: /rooms/family-friendly
+```
+
+#### Get Luxury Rooms
+
+```bash
+GET: /rooms/luxury
+```
+
+#### Get Budget Friendly Rooms
+
+```bash
+GET: /rooms/budget-friendly
+```
+
 ## Credits
 
 Thanks to ChatGPT (OpenAI) and Gemini (Google) for helping me build this project.

@@ -1,3 +1,5 @@
+// src/validators/makePayment.validator.js
+
 const Joi = require("joi");
 
 const makePaymentValidator = Joi.object({

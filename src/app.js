@@ -13,6 +13,7 @@ const bookingRouter = require("./routes/booking.route.js");
 const errorHandler = require("./middlewares/error.middleware.js");
 const { authMiddleware } = require("./middlewares/auth.middleware.js");
 const paymentRouter = require("./routes/payment.route.js");
+const roomRouter = require("./routes/room.route.js");
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.get("/api", async (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/bookings", authMiddleware, bookingRouter);
 app.use("/api/payments", paymentRouter);
+app.use("/api/rooms", roomRouter)
 
 // 404 Handler
 app.use((req, res) => {

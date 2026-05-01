@@ -1,3 +1,5 @@
+// src/utils/apiError.js
+
 function ApiError(statusCode, message, errors = null) {
   const error = new Error(message);
 
