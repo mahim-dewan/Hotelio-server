@@ -108,6 +108,17 @@ const budgetFriendlyRoomsService = async () => {
   return rooms;
 };
 
+// Single room service
+const getRoomBySlugService = async (slug) => {
+  const room = await Room.findOne({ slug }).lean();
+
+  if (!room) {
+    throw ApiError(404, "Room not found");
+  }
+
+  return room;
+};
+
 module.exports = {
   createRoomService,
   exclusiveRoomsService,
@@ -115,4 +126,5 @@ module.exports = {
   familyFriendlyRoomsService,
   luxuryRoomsService,
   budgetFriendlyRoomsService,
+  getRoomBySlugService,
 };

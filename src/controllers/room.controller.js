@@ -8,6 +8,7 @@ const {
   luxuryRoomsService,
   budgetFriendlyRoomsService,
   createRoomService,
+  getRoomBySlugService,
 } = require("../services/room.service");
 
 // Create a new room
@@ -100,6 +101,22 @@ const budgetFriendlyRooms = async (req, res, next) => {
   }
 };
 
+// Get single room
+const getRoomBySlug = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+
+    const room = await getRoomBySlugService(slug);
+
+    res.status(200).json({
+      success: true,
+      data: room,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   createRoom,
   exclusiveRooms,
@@ -107,4 +124,5 @@ module.exports = {
   familyFriendlyRooms,
   luxuryRooms,
   budgetFriendlyRooms,
+  getRoomBySlug,
 };

@@ -8,6 +8,7 @@ const {
   luxuryRooms,
   budgetFriendlyRooms,
   createRoom,
+  getRoomBySlug,
 } = require("../controllers/room.controller");
 const { authMiddleware, authorize } = require("../middlewares/auth.middleware");
 const validate = require("../middlewares/validate.middleware");
@@ -30,5 +31,6 @@ roomRouter.get("/featured", featuredRooms);
 roomRouter.get("/family-friendly", familyFriendlyRooms);
 roomRouter.get("/luxury", luxuryRooms);
 roomRouter.get("/budget-friendly", budgetFriendlyRooms);
+roomRouter.get("/room/:slug", getRoomBySlug);
 
 module.exports = roomRouter;
