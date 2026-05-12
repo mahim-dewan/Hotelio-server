@@ -14,6 +14,11 @@ function errorHandler(err, req, res, next) {
     message = "Something went wrong. Please try again in a moment.";
   }
 
+  if (err.message.includes("ENOTFOUND")) {
+    statusCode = 500;
+    message = "Database connection failed.";
+  }
+
   res.status(statusCode).json({
     success: false,
     message,

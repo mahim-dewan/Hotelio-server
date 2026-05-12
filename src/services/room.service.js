@@ -3,6 +3,7 @@
 const Room = require("../models/room.model");
 const ApiError = require("../utils/apiError");
 const slugify = require("slugify");
+const { getPagination } = require("../utils/pagination");
 
 // Create a new room service
 const createRoomService = async (room) => {
@@ -39,73 +40,140 @@ const createRoomService = async (room) => {
 };
 
 // Exclusive rooms service
-const exclusiveRoomsService = async () => {
-  const rooms = await Room.find({ isExclusive: true }).lean();
+const exclusiveRoomsService = async (query) => {
+  const { limit, skip } = getPagination(query?.page);
+
+  let filter = { isExclusive: true };
+  const rooms = await Room.find(filter)
+    .sort({ updatedAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .lean();
 
   if (!rooms.length) {
     throw ApiError(404, "No exclusive rooms found");
   }
 
-  return rooms;
+  const total = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(total / limit);
+  console.log(total, totalPages);
+
+  return { rooms, totalPages };
 };
 
 // Featured rooms service
-const featuredRoomsService = async () => {
-  const rooms = await Room.find({ category: "luxury" })
+const featuredRoomsService = async (query) => {
+  const { limit, skip } = getPagination(query?.page);
+
+  let filter = { category: "luxury" };
+  const rooms = await Room.find(filter)
     .sort({ bookingsCount: -1 })
+    .skip(skip)
+    .limit(limit)
     .lean();
 
   if (!rooms.length) {
     throw ApiError(404, "No featured rooms found");
   }
 
-  return rooms;
+  const total = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(total / limit);
+
+  return { rooms, totalPages };
 };
 
 // Family friendly rooms service
-const familyFriendlyRoomsService = async () => {
-  const rooms = await Room.find({
-    capacity: { $gte: 4 },
+const familyFriendlyRoomsService = async (query) => {
+  const { limit, skip } = getPagination(query?.page);
+  const capacity = query?.capacity || "all";
+
+  const capacityFilters = {
+    all: { $gte: 4 },
+
+    // 4 - 5 guests
+    small: {
+      $gte: 4,
+      $lte: 5,
+    },
+
+    // 5 - 6 guests
+    medium: {
+      $gte: 5,
+      $lte: 6,
+    },
+
+    // 6+ guests
+    large: {
+      $gte: 6,
+    },
+  };
+
+  let filter = {
+    capacity: capacityFilters[capacity] || capacityFilters.all,
     size: { $gt: 400 },
-  })
+  };
+
+  const rooms = await Room.find(filter)
     .sort({ capacity: -1 })
+    .skip(skip)
+    .limit(limit)
     .lean();
 
   if (!rooms.length) {
     throw ApiError(404, "No featured rooms found");
   }
 
-  return rooms;
+  const total = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(total / limit);
+
+  return { rooms, totalPages };
 };
 
 // Luxury friendly rooms service
-const luxuryRoomsService = async () => {
-  const rooms = await Room.find({
+const luxuryRoomsService = async (query) => {
+  const { limit, skip } = getPagination(query?.page);
+
+  let filter = {
     category: { $in: ["luxury", "villa", "deluxe"] },
-  })
+  };
+  const rooms = await Room.find(filter)
     .sort({ originalPrice: -1 })
+    .skip(skip)
+    .limit(limit)
     .lean();
 
   if (!rooms.length) {
     throw ApiError(404, "No luxury rooms found");
   }
 
-  return rooms;
+  const total = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(total / limit);
+
+  return { rooms, totalPages };
 };
 
 // Budget friendly rooms service
-const budgetFriendlyRoomsService = async () => {
-  const rooms = await Room.find({
+const budgetFriendlyRoomsService = async (query) => {
+  const { limit, skip } = getPagination(query?.page);
+
+  let filter = {
     $or: [{ category: "standard" }, { originalPrice: { $lte: 150 } }],
-  })
+  };
+
+  const rooms = await Room.find(filter)
     .sort({ originalPrice: 1 })
+    .skip(skip)
+    .limit(limit)
     .lean();
 
   if (!rooms.length) {
     throw ApiError(404, "No budget friendly rooms found");
   }
 
-  return rooms;
+  const total = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(total / limit);
+
+  return { rooms, totalPages };
 };
 
 // Single room service

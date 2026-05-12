@@ -29,12 +29,13 @@ const createRoom = async (req, res, next) => {
 // Get exclusive rooms
 const exclusiveRooms = async (req, res, next) => {
   try {
-    const rooms = await exclusiveRoomsService();
+    const { rooms, totalPages } = await exclusiveRoomsService(req?.query);
 
     res.status(200).json({
       success: true,
       count: rooms.length,
       data: rooms,
+      totalPages,
     });
   } catch (err) {
     next(err);
@@ -44,12 +45,13 @@ const exclusiveRooms = async (req, res, next) => {
 // Get featured rooms
 const featuredRooms = async (req, res, next) => {
   try {
-    const rooms = await featuredRoomsService();
+    const { rooms, totalPages } = await featuredRoomsService(req?.query);
 
     res.status(200).json({
       success: true,
       count: rooms.length,
       data: rooms,
+      totalPages,
     });
   } catch (err) {
     next(err);
@@ -59,12 +61,13 @@ const featuredRooms = async (req, res, next) => {
 // Get family friendly rooms
 const familyFriendlyRooms = async (req, res, next) => {
   try {
-    const rooms = await familyFriendlyRoomsService();
+    const { rooms, totalPages } = await familyFriendlyRoomsService(req?.query);
 
     res.status(200).json({
       success: true,
       count: rooms.length,
       data: rooms,
+      totalPages,
     });
   } catch (err) {
     next(err);
@@ -74,12 +77,13 @@ const familyFriendlyRooms = async (req, res, next) => {
 // Get luxury rooms
 const luxuryRooms = async (req, res, next) => {
   try {
-    const rooms = await luxuryRoomsService();
+    const { rooms, totalPages } = await luxuryRoomsService(req?.query);
 
     res.status(200).json({
       success: true,
       count: rooms.length,
       data: rooms,
+      totalPages,
     });
   } catch (err) {
     next(err);
@@ -89,12 +93,13 @@ const luxuryRooms = async (req, res, next) => {
 // Get budget friendly rooms
 const budgetFriendlyRooms = async (req, res, next) => {
   try {
-    const rooms = await budgetFriendlyRoomsService();
+    const { rooms, totalPages } = await budgetFriendlyRoomsService(req?.query);
 
     res.status(200).json({
       success: true,
       count: rooms.length,
       data: rooms,
+      totalPages,
     });
   } catch (err) {
     next(err);
