@@ -54,11 +54,10 @@ const exclusiveRoomsService = async (query) => {
     throw ApiError(404, "No exclusive rooms found");
   }
 
-  const total = await Room.countDocuments(filter);
-  const totalPages = Math.ceil(total / limit);
-  console.log(total, totalPages);
+  const count = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(count / limit);
 
-  return { rooms, totalPages };
+  return { rooms, totalPages, count };
 };
 
 // Featured rooms service
@@ -76,10 +75,10 @@ const featuredRoomsService = async (query) => {
     throw ApiError(404, "No featured rooms found");
   }
 
-  const total = await Room.countDocuments(filter);
-  const totalPages = Math.ceil(total / limit);
+  const count = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(count / limit);
 
-  return { rooms, totalPages };
+  return { rooms, totalPages, count };
 };
 
 // Family friendly rooms service
@@ -104,7 +103,7 @@ const familyFriendlyRoomsService = async (query) => {
 
     // 6+ guests
     large: {
-      $gte: 6,
+      $gt: 6,
     },
   };
 
@@ -123,10 +122,10 @@ const familyFriendlyRoomsService = async (query) => {
     throw ApiError(404, "No featured rooms found");
   }
 
-  const total = await Room.countDocuments(filter);
-  const totalPages = Math.ceil(total / limit);
+  const count = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(count / limit);
 
-  return { rooms, totalPages };
+  return { rooms, totalPages, count };
 };
 
 // Luxury friendly rooms service
@@ -146,10 +145,11 @@ const luxuryRoomsService = async (query) => {
     throw ApiError(404, "No luxury rooms found");
   }
 
-  const total = await Room.countDocuments(filter);
-  const totalPages = Math.ceil(total / limit);
+  const count = await Room.countDocuments(filter);
 
-  return { rooms, totalPages };
+  const totalPages = Math.ceil(count / limit);
+
+  return { rooms, totalPages, count };
 };
 
 // Budget friendly rooms service
@@ -170,10 +170,10 @@ const budgetFriendlyRoomsService = async (query) => {
     throw ApiError(404, "No budget friendly rooms found");
   }
 
-  const total = await Room.countDocuments(filter);
-  const totalPages = Math.ceil(total / limit);
+  const count = await Room.countDocuments(filter);
+  const totalPages = Math.ceil(count / limit);
 
-  return { rooms, totalPages };
+  return { rooms, totalPages, count };
 };
 
 // Single room service

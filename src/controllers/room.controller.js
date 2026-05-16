@@ -29,11 +29,13 @@ const createRoom = async (req, res, next) => {
 // Get exclusive rooms
 const exclusiveRooms = async (req, res, next) => {
   try {
-    const { rooms, totalPages } = await exclusiveRoomsService(req?.query);
+    const { rooms, totalPages, count } = await exclusiveRoomsService(
+      req?.query,
+    );
 
     res.status(200).json({
       success: true,
-      count: rooms.length,
+      count,
       data: rooms,
       totalPages,
     });
@@ -45,11 +47,11 @@ const exclusiveRooms = async (req, res, next) => {
 // Get featured rooms
 const featuredRooms = async (req, res, next) => {
   try {
-    const { rooms, totalPages } = await featuredRoomsService(req?.query);
+    const { rooms, totalPages, count } = await featuredRoomsService(req?.query);
 
     res.status(200).json({
       success: true,
-      count: rooms.length,
+      count,
       data: rooms,
       totalPages,
     });
@@ -61,11 +63,13 @@ const featuredRooms = async (req, res, next) => {
 // Get family friendly rooms
 const familyFriendlyRooms = async (req, res, next) => {
   try {
-    const { rooms, totalPages } = await familyFriendlyRoomsService(req?.query);
+    const { rooms, totalPages, count } = await familyFriendlyRoomsService(
+      req?.query,
+    );
 
     res.status(200).json({
       success: true,
-      count: rooms.length,
+      count,
       data: rooms,
       totalPages,
     });
@@ -77,11 +81,11 @@ const familyFriendlyRooms = async (req, res, next) => {
 // Get luxury rooms
 const luxuryRooms = async (req, res, next) => {
   try {
-    const { rooms, totalPages } = await luxuryRoomsService(req?.query);
+    const { rooms, totalPages, count } = await luxuryRoomsService(req?.query);
 
     res.status(200).json({
       success: true,
-      count: rooms.length,
+      count,
       data: rooms,
       totalPages,
     });
@@ -93,11 +97,13 @@ const luxuryRooms = async (req, res, next) => {
 // Get budget friendly rooms
 const budgetFriendlyRooms = async (req, res, next) => {
   try {
-    const { rooms, totalPages } = await budgetFriendlyRoomsService(req?.query);
+    const { rooms, totalPages, count } = await budgetFriendlyRoomsService(
+      req?.query,
+    );
 
     res.status(200).json({
       success: true,
-      count: rooms.length,
+      count,
       data: rooms,
       totalPages,
     });
