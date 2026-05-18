@@ -1,3 +1,5 @@
+// src/models/payment.model.js
+
 const { Schema, model, models } = require("mongoose");
 
 const paymentSchema = new Schema(

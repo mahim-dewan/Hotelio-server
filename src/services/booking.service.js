@@ -1,3 +1,5 @@
+// src/services/booking.service.js
+
 const doc = require("pdfkit");
 const Booking = require("../models/booking.model");
 const Room = require("../models/room.model");

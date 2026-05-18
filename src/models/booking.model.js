@@ -1,3 +1,5 @@
+// src/models/booking.model.js
+
 const { Schema, model, models } = require("mongoose");
 
 const bookingSchema = new Schema(

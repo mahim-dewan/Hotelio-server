@@ -1,4 +1,5 @@
 // src/validators/auth.schema.js
+
 const Joi = require("joi");
 const { nameField, emailField, passwordField, otpField } = require("./fields");
 

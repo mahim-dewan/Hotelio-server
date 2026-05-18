@@ -1,4 +1,5 @@
 // src/services/otp.service.js
+
 const { generateOTP } = require("../utils/otp.util");
 const { sendOtp } = require("../utils/email.util");
 const emailVerifyOtpTemplate = require("../templates/emailVerify.template");

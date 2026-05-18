@@ -1,3 +1,5 @@
+// src/models/room.model.js
+
 const mongoose = require("mongoose");
 
 const { Schema, model, models } = mongoose;
@@ -18,37 +20,46 @@ const policiesSchema = new Schema({
   pets: { type: String, required: true },
 });
 
+// Main schema
 const roomSchema = new Schema(
   {
     image: { type: String, required: true },
     gallery: { type: [String], default: [] },
-    category: { type: String, required: true, index: true },
-    title: { type: String, required: true, index: true },
+    category: {
+      type: String,
+      required: true,
+      enum: ["standard", "deluxe", "suite", "luxury", "villa"],
+      default: "standard",
+      index: true,
+    },
+    title: { type: String, required: true },
     description: { type: String, required: true },
     capacity: { type: Number, required: true, min: 1 },
     size: { type: Number, required: true }, // square feet
     originalPrice: { type: Number, required: true },
-    discountPrice: { type: Number, required: true },
-    discountPercentage: { type: Number, required: true, min: 0, max: 100 },
-    isOffer: { type: Boolean, default: false },
+    discountPrice: { type: Number },
+    discountPercentage: { type: Number, default: 0, min: 0, max: 100 },
+    isExclusive: { type: Boolean, default: false, index: true },
     promoCode: { type: String, default: null },
     amenities: { type: [String], default: [] },
     specifications: { type: specificationsSchema, required: true },
     policies: { type: policiesSchema, required: true },
-    isAvailable: { type: Boolean, default: true, index: true },
-    rating: { type: Number, min: 0, max: 5, default: 0 },
-    reviewsCount: { type: Number, default: 0 },
+    bookingCount: {
+      type: Number,
+      default: 0,
+    },
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+      index: true,
+    },
   },
   {
     timestamps: true,
     versionKey: false,
   },
 );
-
-// ====================
-// Indexes
-// ====================
-roomSchema.index({ title: "text", category: "text" });
 
 // Model
 const Room = models.Room || model("Room", roomSchema);

@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["USER", "MODARATOR", "ADMIN"],
+      enum: ["USER", "MODERATOR", "ADMIN"],
       default: "USER",
     },
   },
@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function (next) {
   // Skip if password doesn't exist (OAuth users)
   if (!this.password) return next();
-  
+
   const hashedPassword = await makeHashPassword(this.password);
   this.password = hashedPassword;
 });

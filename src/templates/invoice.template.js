@@ -1,3 +1,5 @@
+// src/templates/invoice.template.js
+
 const PDFDocument = require("pdfkit");
 
 // variables

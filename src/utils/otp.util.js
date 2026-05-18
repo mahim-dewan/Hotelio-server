@@ -1,4 +1,5 @@
 // src/utils/otp.util.js
+
 const crypto = require("node:crypto");
 
 // Generate a 6 digit OTP as STRING

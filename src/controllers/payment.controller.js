@@ -1,3 +1,5 @@
+// src/controllers/payment.controller.js
+
 const { default: Stripe } = require("stripe");
 const Payment = require("../models/payment.model");
 const { createSSLPaymentService } = require("../services/sslCommerz.service");

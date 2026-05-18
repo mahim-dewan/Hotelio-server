@@ -1,3 +1,5 @@
+// src/services/payment.service.js
+
 const Booking = require("../models/booking.model");
 const Payment = require("../models/payment.model");
 const ApiError = require("../utils/apiError");
