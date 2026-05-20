@@ -2,7 +2,8 @@
 
 const Joi = require("joi");
 
-const today = new Date().toLocaleString().split(",")[0];
+const today = new Date();
+today.setHours(0, 0, 0, 0);
 
 const bookingValidator = Joi.object({
   room: Joi.string().length(24).hex().required().messages({
@@ -12,10 +13,11 @@ const bookingValidator = Joi.object({
     "any.required": "Room ID is required",
   }),
 
-  checkIn: Joi.date().iso().required().greater(today).messages({
+  checkIn: Joi.date().iso().required().min(today).messages({
     "date.base": "Check-in date must be a valid date.",
     "date.format": "Check-in date must be in YYYY-MM-DD format.",
     "date.iso": "Check-in date must be in YYYY-MM-DD format.",
+    "date.min": "Check-in date cannot be before today.",
     "any.required": "Check-in date is required.",
   }),
 
