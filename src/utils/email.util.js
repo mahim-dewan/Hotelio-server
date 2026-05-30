@@ -1,6 +1,5 @@
 // src/utils/email.util.js
 
-const resend = require("../config/resend");
 const ApiError = require("./apiError");
 
 const sendOtp = async ({ to, subject, template }) => {
