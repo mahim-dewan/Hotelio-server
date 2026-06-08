@@ -42,6 +42,14 @@ app.get("/api", async (req, res) => {
   );
 });
 
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Server running",
+    timestamp: Date.now(),
+  });
+});
+
 app.use("/api/auth", authRouter);
 app.use("/api/bookings", authMiddleware, bookingRouter);
 app.use("/api/payments", paymentRouter);
