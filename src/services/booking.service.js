@@ -26,11 +26,12 @@ const createBookingService = async (bookingPayload) => {
   }
 
   // 2. Check Availability
-  const isBooked = await Booking.exists({
+  const isBooked = !!(await Booking.exists({
     room: room._id,
     checkIn: { $lt: checkOut },
     checkOut: { $gt: checkIn },
-  });
+    status: { $ne: "cancelled" },
+  }));
 
   if (isBooked) {
     throw ApiError(400, "Room is not available for the selected dates");
